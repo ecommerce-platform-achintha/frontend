@@ -17,6 +17,20 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        // Long-lived library chunks: they change rarely, so browsers keep them cached between deploys.
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+          if (/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(id)) return 'vendor-react'
+          if (/node_modules\/(@reduxjs|redux|react-redux|immer|reselect|axios)\//.test(id)) return 'vendor-data'
+          if (id.includes('lucide-react')) return 'vendor-icons'
+          return 'vendor'
+        },
+      },
+    },
+  },
   preview: {
     port: 5173,
     strictPort: true,

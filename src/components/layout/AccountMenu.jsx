@@ -28,9 +28,12 @@ export default function AccountMenu({ align = 'right' }) {
   if (!isAuthenticated) {
     return (
       <div className="flex items-center gap-2">
-        <Button to="/login" variant="ghost" size="sm" className="hidden sm:inline-flex">
-          Sign in
-        </Button>
+        {/* Wrapped: the Button's own inline-flex class would override `hidden`. */}
+        <span className="hidden sm:block">
+          <Button to="/login" variant="ghost" size="sm">
+            Sign in
+          </Button>
+        </span>
         <Button to="/register" size="sm">
           Sign up
         </Button>

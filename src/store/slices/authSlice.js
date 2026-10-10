@@ -104,6 +104,15 @@ export const changePassword = createAsyncThunk('auth/changePassword', async (bod
   }
 })
 
+// PUT /api/users/me { firstName, lastName, phone? } -> the updated profile.
+export const updateProfile = createAsyncThunk('auth/updateProfile', async (body, { rejectWithValue }) => {
+  try {
+    return await usersApi.updateMe(body)
+  } catch (error) {
+    return rejectWithValue(error)
+  }
+})
+
 // Clears local state even if the server call fails.
 export const logout = createAsyncThunk('auth/logout', async () => {
   const session = readSession()
@@ -180,6 +189,9 @@ const authSlice = createSlice({
         if (action.payload?.code === 'PASSWORD_CHANGE_REQUIRED' && state.session) {
           state.session.mustChangePassword = true
         }
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        if (action.payload) state.profile = action.payload
       })
       .addCase(changePassword.fulfilled, (state, action) => {
         applySession(state, action.payload)

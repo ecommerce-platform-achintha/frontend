@@ -1,5 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { CircleAlert, CircleCheck, Info, TriangleAlert, X } from 'lucide-react'
 import { selectToasts, toastDismissed } from '@/store/slices/uiSlice'
 import { TOAST_DURATION_MS } from '@/config/constants'
@@ -32,6 +33,11 @@ export function Toast({ toast }) {
       <div className="min-w-0 flex-1 text-sm">
         {toast.title && <p className="font-semibold text-slate-900 dark:text-slate-100">{toast.title}</p>}
         {toast.message && <p className="text-slate-600 dark:text-slate-300">{toast.message}</p>}
+        {toast.action && (
+          <Link to={toast.action.to} onClick={dismiss} className="mt-1 inline-block font-semibold text-primary-700 hover:underline dark:text-primary-300">
+            {toast.action.label}
+          </Link>
+        )}
       </div>
       <button
         type="button"

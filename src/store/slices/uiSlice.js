@@ -12,7 +12,7 @@ const uiSlice = createSlice({
   name: 'ui',
   initialState: {
     theme: initialTheme(), // 'light' | 'dark'
-    toasts: [], // { id, type: success|error|info|warning, title, message }
+    toasts: [], // { id, type: success|error|info|warning, title, message, action?: { label, to } }
     banners: [], // { id, type, message } shown under the header in every layout
   },
   reducers: {
@@ -28,8 +28,8 @@ const uiSlice = createSlice({
         // Keep at most 4 on screen.
         if (state.toasts.length > 4) state.toasts.shift()
       },
-      prepare({ type = 'info', title, message }) {
-        return { payload: { id: nanoid(), type, title, message } }
+      prepare({ type = 'info', title, message, action }) {
+        return { payload: { id: nanoid(), type, title, message, action: action ?? null } }
       },
     },
     toastDismissed(state, action) {
