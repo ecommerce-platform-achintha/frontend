@@ -4,8 +4,8 @@ import { fetchCategories, selectCategoryTree } from '@/store/slices/categoriesSl
 import Select from '@/components/ui/Select'
 
 // Category tree as a select: parents as options (they include their children), children indented.
-// The value is the category slug.
-export default function CategorySelect({ value, onChange, ...props }) {
+// The value is the category slug. `emptyLabel` is the text of the empty first option.
+export default function CategorySelect({ value, onChange, emptyLabel = 'All categories', ...props }) {
   const dispatch = useDispatch()
   const tree = useSelector(selectCategoryTree)
 
@@ -15,7 +15,7 @@ export default function CategorySelect({ value, onChange, ...props }) {
 
   return (
     <Select value={value} onChange={(e) => onChange(e.target.value)} {...props}>
-      <option value="">All categories</option>
+      <option value="">{emptyLabel}</option>
       {tree.map((parent) => [
         <option key={parent.slug} value={parent.slug}>
           {parent.name}

@@ -90,3 +90,21 @@ export function initials(text) {
   const words = String(text).trim().split(/\s+/).filter(Boolean)
   return (words[0]?.[0] ?? '?').toUpperCase() + (words[1]?.[0] ?? '').toUpperCase()
 }
+
+// Sri Lanka has no daylight saving: Colombo is always UTC+05:30.
+const COLOMBO_OFFSET = '+05:30'
+const COLOMBO_OFFSET_MS = 330 * 60 * 1000
+
+// ISO (UTC) -> "2026-10-07T15:45" for a <input type="datetime-local"> showing Colombo time.
+export function toColomboInput(value) {
+  const d = toDate(value)
+  if (!d) return ''
+  return new Date(d.getTime() + COLOMBO_OFFSET_MS).toISOString().slice(0, 16)
+}
+
+// "2026-10-07T15:45" typed in Colombo time -> UTC ISO string for the API ('' stays null).
+export function fromColomboInput(value) {
+  if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value ?? '')) return null
+  const d = new Date(`${value}:00${COLOMBO_OFFSET}`)
+  return Number.isNaN(d.getTime()) ? null : d.toISOString()
+}

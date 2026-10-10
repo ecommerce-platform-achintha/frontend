@@ -71,7 +71,8 @@ export const ROUTE_ACCESS = {
   customer: { roles: CUSTOMER_ONLY },
 
   // Merchant side
-  merchantDashboard: { roles: OWNER_ONLY },
+  // Owners see the setup checklist and metrics; assistants see work cards or quick links.
+  merchantDashboard: { roles: MERCHANT_SIDE },
   merchantApplication: { roles: OWNER_ONLY },
   merchantOrders: { roles: MERCHANT_SIDE, perms: [PERMS.ORDER_VIEW] },
   merchantComplaints: { roles: MERCHANT_SIDE, perms: [PERMS.ORDER_VIEW] },
@@ -127,15 +128,6 @@ export function canAccess(user, rule = {}) {
   return true
 }
 
-// Assistants land on the first of these they can open (in this order).
-const ASSISTANT_LANDING_ORDER = [
-  ['/merchant/orders', ROUTE_ACCESS.merchantOrders],
-  ['/merchant/products', ROUTE_ACCESS.merchantProducts],
-  ['/merchant/discounts', ROUTE_ACCESS.merchantDiscounts],
-  ['/merchant/reviews', ROUTE_ACCESS.merchantReviews],
-  ['/merchant/customer-blocks', ROUTE_ACCESS.merchantCustomerBlocks],
-]
-
 /**
  * Where to go after login. `user` = { role, status, perms }.
  */
@@ -145,11 +137,9 @@ export function landingPathFor(user) {
       return '/'
     case ROLES.MERCHANT:
       return user.status === USER_STATUS.REJECTED ? '/merchant/application' : '/merchant'
-    case ROLES.ASSISTANT: {
-      const match = ASSISTANT_LANDING_ORDER.find(([, rule]) => canAccess(user, rule))
-      // An assistant whose permissions open no page (e.g. only ORDER_SHIP) sees the 403 page.
-      return match ? match[0] : '/403'
-    }
+    case ROLES.ASSISTANT:
+      // The dashboard shows work cards or quick links to the pages its permissions open.
+      return '/merchant'
     case ROLES.ADMIN:
     case ROLES.SUPER_ADMIN:
       return '/admin'

@@ -12,6 +12,7 @@ import customerOrdersReducer from '@/store/slices/customerOrdersSlice'
 import customerOrderReducer from '@/store/slices/customerOrderSlice'
 import customerComplaintsReducer from '@/store/slices/customerComplaintsSlice'
 import addressesReducer from '@/store/slices/addressesSlice'
+import { MERCHANT_LIST_REDUCERS } from '@/store/slices/merchantLists'
 
 // One reducer per resource. Paged list slices from createPagedResource are added here
 // with the same key as their `name`.
@@ -30,5 +31,7 @@ export const store = configureStore({
     customerOrder: customerOrderReducer,
     customerComplaints: customerComplaintsReducer,
     addresses: addressesReducer,
+    // Seller-center paged lists (merchantOrders, merchantProducts, ...)
+    ...MERCHANT_LIST_REDUCERS,
   },
 })

@@ -40,6 +40,7 @@ import ProfilePage from '@/pages/customer/ProfilePage'
 import MerchantApplicationPage from '@/pages/merchant/MerchantApplicationPage'
 import MerchantAssistantsPage from '@/pages/merchant/MerchantAssistantsPage'
 import MerchantBankAccountsPage from '@/pages/merchant/MerchantBankAccountsPage'
+import MerchantComplaintDetailPage from '@/pages/merchant/MerchantComplaintDetailPage'
 import MerchantComplaintsPage from '@/pages/merchant/MerchantComplaintsPage'
 import MerchantCustomerBlocksPage from '@/pages/merchant/MerchantCustomerBlocksPage'
 import MerchantDashboardPage from '@/pages/merchant/MerchantDashboardPage'
@@ -146,6 +147,7 @@ export const router = createBrowserRouter([
               { path: 'orders', element: guard(A.merchantOrders, <MerchantOrdersPage />) },
               { path: 'orders/:publicId', element: guard(A.merchantOrders, <MerchantOrderDetailPage />) },
               { path: 'complaints', element: guard(A.merchantComplaints, <MerchantComplaintsPage />) },
+              { path: 'complaints/:publicId', element: guard(A.merchantComplaints, <MerchantComplaintDetailPage />) },
               { path: 'products', element: guard(A.merchantProducts, <MerchantProductsPage />) },
               { path: 'products/new', element: guard(A.merchantProductCreate, <MerchantProductCreatePage />) },
               { path: 'products/:publicId', element: guard(A.merchantProducts, <MerchantProductDetailPage />) },

@@ -12,9 +12,11 @@ const SIDES = {
   left: 'm-0 mr-auto h-dvh max-h-dvh w-[85vw] max-w-xs',
   right: 'm-0 ml-auto h-dvh max-h-dvh w-[85vw] max-w-xs',
   bottom: 'mx-0 mt-auto mb-0 max-h-[85dvh] w-full max-w-none rounded-t-2xl',
+  // A wider right-hand panel for detail views (e.g. an assistant's details).
+  'right-wide': 'm-0 ml-auto h-dvh max-h-dvh w-full max-w-lg',
 }
 
-export default function Drawer({ open, onClose, title, side = 'left', footer, children, className }) {
+export default function Drawer({ open, onClose, title, side = 'left', wide = false, footer, children, className }) {
   const ref = useRef(null)
   const titleId = useId()
 
@@ -36,7 +38,7 @@ export default function Drawer({ open, onClose, title, side = 'left', footer, ch
       onClick={(e) => e.target === ref.current && onClose?.()}
       className={cn(
         'bg-white p-0 text-slate-900 shadow-pop open:animate-fade-in dark:bg-slate-900 dark:text-slate-100',
-        SIDES[side] ?? SIDES.left,
+        SIDES[wide && side === 'right' ? 'right-wide' : side] ?? SIDES.left,
       )}
     >
       {open && (
@@ -45,7 +47,7 @@ export default function Drawer({ open, onClose, title, side = 'left', footer, ch
             <h2 id={titleId} className="text-base font-semibold">
               {title}
             </h2>
-            <IconButton icon={X} label="Close menu" size="sm" onClick={onClose} />
+            <IconButton icon={X} label="Close" size="sm" onClick={onClose} />
           </div>
           <div className="flex-1 overflow-y-auto">{children}</div>
           {footer && <div className="border-t border-slate-100 px-4 py-3 dark:border-slate-800">{footer}</div>}

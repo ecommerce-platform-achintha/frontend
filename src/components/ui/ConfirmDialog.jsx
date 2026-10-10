@@ -8,6 +8,7 @@ import Textarea from './Textarea'
 /**
  * Confirmation dialog. Used for every ban, reject, hide and resolve action.
  * With `requireReason`, the user must type 1 to 500 characters; onConfirm receives the trimmed reason.
+ * With `reasonOptional`, the reason field is shown but may stay empty (onConfirm gets '' then).
  * onConfirm may return a promise: the button shows a spinner until it settles.
  * Throw (or reject) from onConfirm to keep the dialog open; pass the server message as `error`.
  */
@@ -21,6 +22,7 @@ export default function ConfirmDialog({
   cancelLabel = 'Cancel',
   tone = 'primary', // primary | danger
   requireReason = false,
+  reasonOptional = false,
   reasonLabel = 'Reason',
   reasonHint = 'Kept in the record. Up to 500 characters.',
   error,
@@ -29,6 +31,7 @@ export default function ConfirmDialog({
   const [reason, setReason] = useState('')
   const [reasonError, setReasonError] = useState('')
   const [busy, setBusy] = useState(false)
+  const showReason = requireReason || reasonOptional
 
   const close = () => {
     if (busy) return
@@ -39,14 +42,14 @@ export default function ConfirmDialog({
 
   const submit = async (event) => {
     event.preventDefault()
-    if (requireReason) {
-      const problem = validateReason(reason)
+    if (showReason) {
+      const problem = validateReason(reason, { required: requireReason })
       setReasonError(problem)
       if (problem) return
     }
     setBusy(true)
     try {
-      await onConfirm?.(requireReason ? reason.trim() : undefined)
+      await onConfirm?.(showReason ? reason.trim() : undefined)
       setReason('')
     } catch {
       // The caller shows the error (via `error` or a toast); keep the dialog open.
@@ -75,8 +78,8 @@ export default function ConfirmDialog({
     >
       <form id={formId} onSubmit={submit} className="space-y-4" noValidate>
         {message && <div className="text-sm text-slate-600 dark:text-slate-300">{message}</div>}
-        {requireReason && (
-          <FormField label={reasonLabel} hint={reasonHint} error={reasonError} required>
+        {showReason && (
+          <FormField label={reasonLabel} hint={reasonHint} error={reasonError} required={requireReason}>
             <Textarea
               value={reason}
               onChange={(e) => {

@@ -10,6 +10,15 @@ const PREFER_SERVER_MESSAGE = new Set([
   'ACCOUNT_BANNED',
   'VALIDATION_FAILED',
   'INSUFFICIENT_STOCK',
+  // Merchant side: the server message names the field, rule or limit.
+  'INVALID_QUOTE',
+  'INVALID_VARIANTS',
+  'INVALID_DISCOUNT',
+  'INVALID_TRACKING_NUMBER',
+  'INVALID_STATUS_TRANSITION',
+  'APPLICATION_LIMIT_REACHED',
+  'BANK_ACCOUNT_LIMIT_REACHED',
+  'NIC_ALREADY_ASSIGNED',
 ])
 
 const MESSAGES = {
@@ -21,7 +30,7 @@ const MESSAGES = {
   RATE_LIMITED: 'Too many requests. Please wait a moment and try again.',
   CONCURRENT_MODIFICATION: 'This was changed at the same time somewhere else. We reloaded it; please try again.',
   NOT_FOUND: 'We could not find that. It may have been removed.',
-  ACCESS_DENIED: 'You do not have access to this.',
+  ACCESS_DENIED: 'You do not have permission for this. If you need it, ask the account owner.',
   INVALID_SORT: 'That sort order is not supported.',
 
   // Cart and checkout
@@ -52,6 +61,22 @@ const MESSAGES = {
 
   // Reviews
   REVIEW_ALREADY_EXISTS: 'You already reviewed this.',
+  REPLY_ALREADY_EXISTS: 'This review already has a reply.',
+
+  // Seller center
+  STORE_PROFILE_REQUIRED: 'Set up your store profile first.',
+  STORE_NAME_TAKEN: 'Another store already uses this name.',
+  MERCHANT_NOT_APPROVED: 'Your account must be approved before products can go live.',
+  MERCHANT_NOT_ACTIVE: 'Your account must be approved before adding assistants.',
+  QUOTE_REVISION_LIMIT_REACHED: 'This order cannot be re-quoted again: the revision limit was reached.',
+  COURIER_NOT_AVAILABLE: 'That courier is not enabled for your store, or it does not support cash on delivery.',
+  COURIER_NOT_ENABLED: 'That courier is not enabled for your store.',
+  BANK_NOT_AVAILABLE: 'That bank is not available any more. Choose another one.',
+  SHIPPING_TEMPLATE_EXISTS: 'This courier already has a shipping template. Edit that one instead.',
+  SKU_TAKEN: 'This SKU is already used by another product in your store.',
+  COMPLAINT_ALREADY_RESPONDED: 'This complaint already has a response.',
+  CUSTOMER_ALREADY_BLOCKED: 'This customer is already blocked.',
+  ACCOUNT_REMOVED: 'This account was removed.',
 
   // Account
   ADDRESS_LIMIT_REACHED: 'You have reached the maximum number of addresses. Delete one to add another.',

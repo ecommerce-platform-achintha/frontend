@@ -1,11 +1,12 @@
 // Read-only order sections shared by the customer, merchant and admin order pages.
 // Every number comes straight from the order response (contract section 8); nothing is recomputed.
-import { CircleCheck, CircleX, Info } from 'lucide-react'
+import { CircleCheck, CircleX, ExternalLink, Info } from 'lucide-react'
 import { orderProgress, TERMINAL_STATUS_TEXT, TIMELINE_STEPS, isOpenOrder } from '@/config/orders'
 import { STATUS_LABELS } from '@/config/enums'
 import { formatDateTime, formatMoney, humanizeEnum } from '@/utils/format'
 import { cn } from '@/utils/cn'
 import SmartImage from '@/components/common/SmartImage'
+import Badge from '@/components/ui/Badge'
 import StatusBadge from '@/components/ui/StatusBadge'
 import Stepper from '@/components/ui/Stepper'
 
@@ -17,7 +18,8 @@ const attributesText = (attributes) =>
     : ''
 
 // Stepper for open orders; a clear banner (with the reason) for terminal ones.
-export function OrderProgress({ order }) {
+// `terminalText` words the banner for the reader (customer texts by default).
+export function OrderProgress({ order, terminalText = TERMINAL_STATUS_TEXT }) {
   if (isOpenOrder(order.status)) {
     const { steps, currentIndex, failed } = orderProgress(order.status, order.paymentMethod)
     return <Stepper steps={steps} currentIndex={currentIndex} failed={failed} />
@@ -37,7 +39,7 @@ export function OrderProgress({ order }) {
       <Icon aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
       <div>
         <p className="font-semibold">{STATUS_LABELS[order.status] ?? humanizeEnum(order.status)}</p>
-        <p>{TERMINAL_STATUS_TEXT[order.status] ?? 'This order is closed.'}</p>
+        <p>{terminalText[order.status] ?? 'This order is closed.'}</p>
         {order.reasonCode && <p className="mt-1">Reason: {humanizeEnum(order.reasonCode)}</p>}
         {order.reason && <p className="mt-1 whitespace-pre-line">“{order.reason}”</p>}
         {order.deliveryFailureType && <p className="mt-1">Delivery problem: {STATUS_LABELS[order.deliveryFailureType] ?? humanizeEnum(order.deliveryFailureType)}</p>}
@@ -47,7 +49,8 @@ export function OrderProgress({ order }) {
 }
 
 // Items. `orderedQuantity` is what the customer asked for; `quantity` is what the quote kept.
-export function OrderItems({ items = [] }) {
+// `orderedLabel` words the note for the reader ("You asked for" for customers, "Ordered" for stores).
+export function OrderItems({ items = [], orderedLabel = 'You asked for' }) {
   return (
     <ul className="divide-y divide-slate-100 dark:divide-slate-800">
       {items.map((item) => {
@@ -64,7 +67,7 @@ export function OrderItems({ items = [] }) {
                 {formatMoney(item.unitPrice)} × {item.quantity}
                 {reduced && (
                   <span className="ml-2 rounded bg-warning-50 px-1.5 py-0.5 font-medium text-warning-800 dark:bg-warning-500/15 dark:text-warning-300">
-                    You asked for {item.orderedQuantity}
+                    {orderedLabel} {item.orderedQuantity}
                   </span>
                 )}
                 {Number(item.discountAmount) > 0 && <span className="ml-2 text-slate-400 line-through">{formatMoney(item.listPrice)}</span>}
@@ -165,3 +168,35 @@ export function OrderPayments({ payments = [] }) {
   )
 }
 
+// Only open tracking links that are https (the template comes from admin data, but be safe).
+const safeTrackingUrl = (url) => (typeof url === 'string' && url.startsWith('https://') ? url : null)
+
+export function OrderShipment({ shipment }) {
+  if (!shipment) return <p className="text-sm text-slate-500">Not shipped yet.</p>
+  const url = safeTrackingUrl(shipment.trackingUrl)
+  return (
+    <div className="space-y-1 text-sm">
+      <p className="font-medium text-slate-900 dark:text-white">{shipment.courierName ?? shipment.courierCode}</p>
+      <p className="text-slate-600 dark:text-slate-300">
+        Tracking number <span className="font-mono font-medium">{shipment.trackingNumber}</span>
+      </p>
+      {shipment.shippedAt && <p className="text-xs text-slate-500 dark:text-slate-400">Shipped {formatDateTime(shipment.shippedAt)}</p>}
+      {url && (
+        <a href={url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 font-semibold text-primary-700 hover:underline dark:text-primary-300">
+          Track parcel <ExternalLink aria-hidden="true" className="size-4" />
+        </a>
+      )}
+    </div>
+  )
+}
+
+// Store-side deadline flags (set by the server when a deadline passed).
+export function LateFlags({ flags }) {
+  if (!flags?.lateShipment && !flags?.lateVerification) return null
+  return (
+    <span className="flex flex-wrap gap-1">
+      {flags.lateShipment && <Badge tone="danger">Late shipment</Badge>}
+      {flags.lateVerification && <Badge tone="danger">Late payment check</Badge>}
+    </span>
+  )
+}
