@@ -61,6 +61,7 @@ import AdminAtRiskPage from '@/pages/admin/AdminAtRiskPage'
 import AdminBanksPage from '@/pages/admin/AdminBanksPage'
 import AdminCategoriesPage from '@/pages/admin/AdminCategoriesPage'
 import AdminCodObjectionsPage from '@/pages/admin/AdminCodObjectionsPage'
+import AdminComplaintDetailPage from '@/pages/admin/AdminComplaintDetailPage'
 import AdminComplaintsPage from '@/pages/admin/AdminComplaintsPage'
 import AdminCouriersPage from '@/pages/admin/AdminCouriersPage'
 import AdminCreditsPage from '@/pages/admin/AdminCreditsPage'
@@ -183,6 +184,7 @@ export const router = createBrowserRouter([
               { path: 'orders', element: <AdminOrdersPage /> },
               { path: 'orders/:publicId', element: <AdminOrderDetailPage /> },
               { path: 'complaints', element: <AdminComplaintsPage /> },
+              { path: 'complaints/:publicId', element: <AdminComplaintDetailPage /> },
               { path: 'flagged-references', element: <AdminFlaggedReferencesPage /> },
               { path: 'cod-objections', element: <AdminCodObjectionsPage /> },
               { path: 'categories', element: <AdminCategoriesPage /> },

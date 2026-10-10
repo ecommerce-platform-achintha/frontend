@@ -19,6 +19,8 @@ const PREFER_SERVER_MESSAGE = new Set([
   'APPLICATION_LIMIT_REACHED',
   'BANK_ACCOUNT_LIMIT_REACHED',
   'NIC_ALREADY_ASSIGNED',
+  // Admin: the server names the value or rule.
+  'INVALID_SETTING_VALUE',
 ])
 
 const MESSAGES = {
@@ -77,6 +79,20 @@ const MESSAGES = {
   COMPLAINT_ALREADY_RESPONDED: 'This complaint already has a response.',
   CUSTOMER_ALREADY_BLOCKED: 'This customer is already blocked.',
   ACCOUNT_REMOVED: 'This account was removed.',
+
+  // Admin console
+  COMPLAINT_ALREADY_DECIDED: 'This complaint was already decided. We reloaded it.',
+  OBJECTION_ALREADY_DECIDED: 'This objection was already decided. We reloaded the list.',
+  FLAG_ALREADY_REVIEWED: 'This reference was already reviewed. We reloaded the list.',
+  CATEGORY_IN_USE: 'This category is used by products, so it cannot be deleted. You can deactivate it instead.',
+  CATEGORY_SLUG_TAKEN: 'Another category already uses this slug.',
+  CATEGORY_NAME_TAKEN: 'Another category already uses this name.',
+  BANK_IN_USE: 'This bank is in use, so it cannot be deleted. You can deactivate it instead.',
+  COURIER_IN_USE: 'This courier is in use, so it cannot be deleted. You can deactivate it instead.',
+  BANK_CODE_TAKEN: 'Another bank already uses this code.',
+  COURIER_CODE_TAKEN: 'Another courier already uses this code.',
+  HOLIDAY_DATE_TAKEN: 'There is already a holiday on this date.',
+  UNKNOWN_SETTING: 'This setting does not exist any more. Reload the page.',
 
   // Account
   ADDRESS_LIMIT_REACHED: 'You have reached the maximum number of addresses. Delete one to add another.',
